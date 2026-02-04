@@ -256,10 +256,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 373d2aea49e3241499bc960ccf540a2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  countDisplay: {fileID: 0}
-  duration: 0.3
-  scalePower: 0.097
-  movePower: 0.1
+  jiggleDuration: 0.5
+  jiggleStrength: 0.1
+  countDisplay: {fileID: 1779463530}
 --- !u!58 &707587063
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -702,7 +701,7 @@ GameObject:
   - component: {fileID: 1779463531}
   - component: {fileID: 1779463530}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: CountText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1061,10 +1060,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 373d2aea49e3241499bc960ccf540a2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CheekAction
-  countDisplay: {fileID: 0}
-  duration: 0.4
-  scalePower: 0.2
-  movePower: 0.03
+  jiggleDuration: 0.5
+  jiggleStrength: 0.1
+  countDisplay: {fileID: 1779463530}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

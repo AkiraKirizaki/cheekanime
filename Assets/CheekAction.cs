@@ -1,73 +1,107 @@
 using UnityEngine;
 using System.Collections;
-using TMPro; // •¶š‚ğ•\¦‚·‚é‚½‚ß‚É‚±‚ê‚ğ’Ç‰ÁI
+using TMPro;
 
 public class CheekAction : MonoBehaviour
 {
-    // ‘S‚Ä‚Ì–j‚Å‹¤—L‚³‚ê‚éu‡Œv‰ñ”v
-    private static int totalPuniCount = 0;
+    // å°†æ¥çš„ã«Spineã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã¸ã®å‚ç…§ã‚’ã“ã“ã«è¿½åŠ äºˆå®š
+    // public SkeletonAnimation spineAnimation; 
 
-    // ‰æ–Êã‚Ì•¶š‚ğ•\¦‚·‚é•”•i‚ğ•R•t‚¯‚é‚½‚ß‚Ì˜g
-    [SerializeField] TextMeshProUGUI countDisplay;
-
-    [Header("—h‚ê‚Ìİ’è")]
-    [SerializeField] float duration = 0.4f;
-    [SerializeField] float scalePower = 0.15f;
-    [SerializeField] float movePower = 0.03f;
+    public float jiggleDuration = 0.5f;
+    public float jiggleStrength = 0.1f;
+    public TextMeshProUGUI countDisplay;
 
     private Vector3 originalScale;
-    private Vector3 originalPosition;
     private bool isAnimating = false;
+    private int pokeCount = 0;
+    private const string POKE_COUNT_KEY = "PokeCount";
 
     void Start()
     {
         originalScale = transform.localScale;
-        originalPosition = transform.localPosition;
-
-        // Å‰‚ÉŒ»İ‚Ì‰ñ”‚ğ•\¦i0‰ñj
-        UpdateDisplayText();
+        
+        // ä¿å­˜ã•ã‚ŒãŸã‚«ã‚¦ãƒ³ãƒˆã‚’èª­ã¿è¾¼ã‚€
+        pokeCount = PlayerPrefs.GetInt(POKE_COUNT_KEY, 0);
+        UpdateCountDisplay();
     }
 
     void OnMouseDown()
     {
-        // ƒNƒŠƒbƒN‚³‚ê‚½‚ç‰ñ”‚ğ‘‚â‚·
-        totalPuniCount++;
+        // æ¼”å‡ºä¸­ã¯ã‚¯ãƒªãƒƒã‚¯ã‚’å—ã‘ä»˜ã‘ãªã„ï¼ˆé€£æ‰“é˜²æ­¢ã‚’ã—ãŸã„å ´åˆï¼‰
+        // if (isAnimating) return; 
 
-        // ‰æ–Ê‚Ì•¶š‚ğXV‚·‚é
-        UpdateDisplayText();
+        // ãƒ­ã‚¸ãƒƒã‚¯: ã‚«ã‚¦ãƒ³ãƒˆã‚¢ãƒƒãƒ—ã¨ä¿å­˜
+        IncrementPokeCount();
 
+        // æ¼”å‡º: ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³å†ç”Ÿ
+        PlayPokeAnimation();
+
+        // æ¼”å‡º: ã‚µã‚¦ãƒ³ãƒ‰å†ç”Ÿ
+        PlayPokeSound();
+    }
+
+    private void IncrementPokeCount()
+    {
+        pokeCount++;
+        PlayerPrefs.SetInt(POKE_COUNT_KEY, pokeCount);
+        PlayerPrefs.Save();
+        UpdateCountDisplay();
+    }
+
+    private void UpdateCountDisplay()
+    {
+        if (countDisplay != null)
+        {
+            countDisplay.text = pokeCount + "ã·ã«";
+        }
+    }
+
+    // --- Future Proofing Hooks ---
+
+    /// <summary>
+    /// é ¬ã‚’çªã¤ã„ãŸã¨ãã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å†ç”Ÿã™ã‚‹
+    /// </summary>
+    private void PlayPokeAnimation()
+    {
+        // ç¾åœ¨ã¯Tweençš„ãªå‡¦ç†ã§æºã‚‰ã—ã¦ã„ã‚‹ãŒã€
+        // å°†æ¥çš„ã«ã¯ã“ã“ã§Spineã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å†ç”Ÿã™ã‚‹å‡¦ç†ã«å·®ã—æ›¿ãˆã‚‹
+        // ex: spineAnimation.AnimationState.SetAnimation(0, "poke", false);
+        
         if (!isAnimating)
         {
             StartCoroutine(JiggleEffect());
         }
     }
 
-    // •\¦‚ğXV‚·‚éê—p‚Ì–½—ßi“¯‚¶‚±‚Æ‚ğ“ñ‰ñ‘‚©‚È‚¢‚½‚ß‚É•ª‚¯‚Ü‚·j
-    void UpdateDisplayText()
+    /// <summary>
+    /// é ¬ã‚’çªã¤ã„ãŸã¨ãã®åŠ¹æœéŸ³ã‚’å†ç”Ÿã™ã‚‹
+    /// </summary>
+    private void PlayPokeSound()
     {
-        if (countDisplay != null)
-        {
-            countDisplay.text = "‚ ‚È‚½‚Íu" + totalPuniCount + "v‰ñ‚ç‚¤‚ç‚¿‚á‚ñ‚ğ‚Õ‚É‚è‚Ü‚µ‚½\n" + totalPuniCount + " ‚Õ‚É";
-        }
+        // å°†æ¥çš„ãªã‚ªãƒ¼ãƒ‡ã‚£ã‚ªå®Ÿè£…ç”¨ãƒ—ãƒ¬ãƒ¼ã‚¹ãƒ›ãƒ«ãƒ€ãƒ¼
+        // ex: AudioManager.PlaySE("poke_sound");
     }
 
-    IEnumerator JiggleEffect()
+    // --- Legacy Animation (To be replaced by Spine) ---
+
+    private IEnumerator JiggleEffect()
     {
         isAnimating = true;
         float elapsed = 0f;
-        while (elapsed < duration)
+
+        while (elapsed < jiggleDuration)
         {
             elapsed += Time.deltaTime;
-            float percent = elapsed / duration;
-            float damping = 1.0f - percent;
-            float scaleX = Mathf.Sin(elapsed * 25f) * scalePower * damping;
-            transform.localScale = originalScale + new Vector3(scaleX, -scaleX, 0);
-            float moveX = Mathf.Sin(elapsed * 30f) * movePower * damping;
-            transform.localPosition = originalPosition + new Vector3(moveX, 0, 0);
+            float percent = elapsed / jiggleDuration;
+            
+            // ã‚·ãƒ³ãƒ—ãƒ«ãªã‚µã‚¤ãƒ³æ³¢ã§ç¸®ã‚“ã ã‚Šä¼¸ã³ãŸã‚Šã•ã›ã‚‹
+            float scaleMultiplier = 1.0f + Mathf.Sin(percent * Mathf.PI * 2) * jiggleStrength * (1.0f - percent);
+            
+            transform.localScale = originalScale * scaleMultiplier;
             yield return null;
         }
+
         transform.localScale = originalScale;
-        transform.localPosition = originalPosition;
         isAnimating = false;
     }
 }
