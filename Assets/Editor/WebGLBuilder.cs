@@ -11,8 +11,7 @@ public class WebGLBuilder
         // ビルド出力先フォルダ
         string buildPath = "build/WebGL";
 
-        // ビルド前にCanvas設定を適用
-        CanvasSetup.Setup();
+
 
         // シーンリストの取得
         string[] scenes = EditorBuildSettings.scenes
