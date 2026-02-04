@@ -17,7 +17,7 @@ jobs:
       - name: Free Disk Space for Unity
         uses: jlumbroso/free-disk-space@v1.3.1
         with:
-          tool-cache: false
+          tool-cache: true
           android: true
           dotnet: true
           haskell: true
@@ -30,13 +30,14 @@ jobs:
         with:
           lfs: true
 
-      - name: Cache
-        uses: actions/cache@v3
-        with:
-          path: Library
-          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
-          restore-keys: |
-            Library-
+      # キャッシュを無効化してディスク容量を節約
+      # - name: Cache
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: Library
+      #     key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+      #     restore-keys: |
+      #       Library-
 
       - name: Build project
         uses: game-ci/unity-builder@v4
