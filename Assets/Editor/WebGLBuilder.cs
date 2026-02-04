@@ -13,11 +13,19 @@ public class WebGLBuilder
 
 
 
+        Console.WriteLine(":: Starting WebGL Build ::");
+
         // シーンリストの取得
         string[] scenes = EditorBuildSettings.scenes
             .Where(s => s.enabled)
             .Select(s => s.path)
             .ToArray();
+
+        Console.WriteLine($":: Scenes to build: {scenes.Length} ::");
+        foreach (var scene in scenes)
+        {
+            Console.WriteLine($" - {scene}");
+        }
 
         // ビルドオプションの設定
         BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions
