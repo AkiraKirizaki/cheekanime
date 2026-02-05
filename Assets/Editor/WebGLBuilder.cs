@@ -65,8 +65,8 @@ public class WebGLBuilder
                 Debug.Log($"Build step: {step.name} - Duration: {step.duration}");
                 foreach (var message in step.messages)
                 {
-                    if (message.type == LogType.Error || 
-                        message.type == LogType.Exception)
+                    if (message.type == UnityEngine.LogType.Error || 
+                        message.type == UnityEngine.LogType.Exception)
                     {
                         Debug.LogError($"  Error: {message.content}");
                     }
