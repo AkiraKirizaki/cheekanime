@@ -54,6 +54,25 @@ public class WebGLBuilder
         else
         {
             Debug.LogError($"Build failed: {report.summary.result}");
+            
+            // 詳細なエラー情報を出力
+            Debug.LogError($"Total errors: {report.summary.totalErrors}");
+            Debug.LogError($"Total warnings: {report.summary.totalWarnings}");
+            
+            // ビルドステップの詳細を出力
+            foreach (var step in report.steps)
+            {
+                Debug.Log($"Build step: {step.name} - Duration: {step.duration}");
+                foreach (var message in step.messages)
+                {
+                    if (message.type == UnityEditor.Build.Reporting.LogType.Error || 
+                        message.type == UnityEditor.Build.Reporting.LogType.Exception)
+                    {
+                        Debug.LogError($"  Error: {message.content}");
+                    }
+                }
+            }
+            
             if (Application.isBatchMode)
             {
                 EditorApplication.Exit(1);
