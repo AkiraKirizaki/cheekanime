@@ -36,12 +36,10 @@ public class WebGLBuilder
             options = BuildOptions.None
         };
 
-        // GitHub Pages向けに圧縮設定を調整 (任意)
-        // PlayerSettings.WebGL.compressionFormat = WebGLCompressionFormat.Brotli; // デフォルト
-        // サーバー設定ができない場合は Disabled にする必要がある場合がありますが、
-        // 近年のGitHub Pagesはgzip/brotliに対応していることが多いです。
-        // トラブルシュート用にDecompression Fallbackを有効にしておくと安全です。
-        PlayerSettings.WebGL.decompressionFallback = true;
+        // GitHub Pages向けに圧縮設定を調整
+        // CI環境での安定性のために圧縮を無効化
+        PlayerSettings.WebGL.compressionFormat = WebGLCompressionFormat.Disabled;
+        PlayerSettings.WebGL.decompressionFallback = false;
 
         // ビルド実行
         UnityEditor.Build.Reporting.BuildReport report = BuildPipeline.BuildPlayer(buildPlayerOptions);
